@@ -1,0 +1,14 @@
+libspotify trace from 12.1.51.g86c92b43 Release Linux-x86_64 
+
+< sp_session_create() = 0
+> sp_session_login(0x26f5cb0 'ecs-priteshg' '<hidden>' 0) on 0x7fd1985bf780
+> sp_search_create(0x26f5cb0 search text 10 5 0 10 0 10 10 10 0 0x7fd18fbd1760 0x26f1330) on 0x7fd1985bf780
+< sp_search_create() = 0x26f8bc0
+> sp_search_release(0x26f8bc0) on 0x7fd1985bf780
+> sp_session_process_events(0x26f5cb0 0x7fff5a51b04c) on 0x7fd1985bf780
+> sp_session_playlistcontainer(0x26f5cb0) on 0x7fd1985bf780
+< sp_session_playlistcontainer() = 0x26f60a0
+> sp_playlistcontainer_add_callbacks(0x26f60a0 0x7fd18fdfd060 (nil)) on 0x7fd1985bf780
+< sp_playlistcontainer_add_callbacks() = 
+< sp_session_process_events() = 274
+> sp_session_process_events(0x26f5cb0 0x7fff5a51e51c) on 0x7fd1985bf780

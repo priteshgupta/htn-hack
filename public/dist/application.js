@@ -173,6 +173,14 @@ angular.module('core').controller('HomeController', [
     $scope.authentication = Authentication;
   }
 ]);'use strict';
+angular.module('core').controller('PlayerController', [
+  '$scope',
+  'Authentication',
+  function ($scope, Authentication) {
+    // This provides Authentication context.
+    $scope.authentication = Authentication;
+  }
+]);'use strict';
 //Menu service used for managing  menus
 angular.module('core').service('Menus', [function () {
     // Define a set of default roles

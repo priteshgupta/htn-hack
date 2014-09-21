@@ -26,13 +26,16 @@ angular.element(document).ready(function() {
 		    
 		    playlistDetailTemplateSource = document.getElementById('playlist-detail-template').innerHTML,
 		    playlistDetailTemplate = Handlebars.compile(playlistDetailTemplateSource),
-		    playlistDetailPlaceholder = document.getElementById('playlist-detail')
+		    playlistDetailPlaceholder = document.getElementById('playlist-detail'),
+		    createPlaylistButton = document.getElementById('create-playlist');
 
 		if (document.getElementById('login')) {
 			document.getElementById('login').addEventListener('click', function() {
 		    login();
 			});
 		}
+
+		$('.for-loggedin').hide();
 
 		function login() {
 		    var width = 400,
@@ -77,42 +80,16 @@ angular.element(document).ready(function() {
 
 			if (myCookie) {
         $('div#login').hide();
+        $('.for-loggedin').show();
 				clearInterval(checkCookie);
-		    showInfo(myCookie, function(myCookie) {
-		    	createPlaylist(myCookie);
-		    });
+		    showInfo(myCookie, storeToPlaylist);
 			}
 		};
 
 		var checkCookie = setInterval(searchCookie, 200);
 
-		function createPlaylist(accessToken) {
-			if (document.cookie.replace(/(?:(?:^|.*;\s*)spotcompl\s*\=\s*([^;]*).*$)|^.*$/, "$1"))
-				return;
-
-	    var date = new Date();
-	    var plName = 'HTN ' + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
-
-	    var url = 'https://api.spotify.com/v1/users/' + user_id + '/playlists';
-
-	    $.ajax(url, {
-	    	method: 'POST',
-	    	data: JSON.stringify({
-	    		'name': plName,
-	    		'public': false
-	    	}),
-	    	dataType: 'json',
-	    	headers: {
-	    		'Authorization': 'Bearer ' + accessToken,
-	    		'Content-Type': 'application/json'
-	    	},
-	    	success: function(response) {
-	    		window.playlist_url = sp_newPlaylist = response.href;
-	    		var sp_c_frameUrl = 'https://embed.spotify.com/?uri=spotify:user:' + response.owner.id + ':playlist:' + response.id + '&theme=white';
-	    		$('#community-playlist').attr('src', sp_c_frameUrl);
-	    		document.cookie = 'spotcompl=true';
-	    	}
-	    });
+		function storeToPlaylist() {
+			window.spot_songs = [];
 		};
 
 		function showInfo(accessToken, cb) {
@@ -124,7 +101,7 @@ angular.element(document).ready(function() {
 		            'Authorization': 'Bearer ' + accessToken
 		        },
 		        success: function(response) {
-		            user_id = response.id.toLowerCase();         
+		            window.user_id =  user_id = response.id.toLowerCase();         
 		            $.ajax({
 		                url: 'https://api.spotify.com/v1/users/' + user_id + '/playlists?limit=15',
 		                headers: {

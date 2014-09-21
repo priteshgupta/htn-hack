@@ -3,25 +3,35 @@
     <div id="login">
       <h1>&nbsp;</h1>
         <button id="login" class="btn btn-primary">Login with Spotify</button>
+      <h1>&nbsp;</h1>
     </div>
+
     <div id="loggedin">
-        <h2>Community Playlist</h2>
+        <!-- <h2>Playup Playlist</h2> -->
         <div class="row" id="existing-playlists">
-            <div class="col-md-6" id="community-playlists-list">
-            <ul>
-                <li ng-repeat='song in songs'>
-                    <!-- Score: {{ song.score }} -->
-                    <a href="#" class="waves-effect waves-button load" data-score="{{song.score}}">{{ song.title }}</a>
+            <div class="col-md-8" id="community-playlists-list">
+            <ul class="comm-pl">
+                <li class="load" ng-repeat='song in songs | orderBy: orderPred'>
+                    <div class="upvote">
+                        <a class="upvote" ng-click="upvoteSong(this)"></a>
+                        <span class="count">{{ song.score }}</span>
+                        <a class="downvote" ng-click="downvoteSong(this)"></a>
+                        <a class="star"></a>
+                    </div>
+                    <img ng-src="{{song.thumb}}">
+                    <a class="load" data-score="{{song.score}}" ng-click="changeSong(song)">{{ song.title | limitTo : 30 }}</a>
                 </li>
             </ul>
             </div>
-            <div class="col-md-6" id="community-playlist-detail">
-                <iframe id="community-playlist" src="https://embed.spotify.com/?uri=spotify:track:4bz7uB4edifWKJXSDxwHcs" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+            <div class="col-md-4 com-cover" id="community-playlist-detail">
+                <iframe id="community-playlist-try" src="https://embed.spotify.com/?uri=spotify:track:" style="width: 100%; height: 500px" frameborder="0" allowtransparency="true" ng-hide="playlistCreated"></iframe>
+                <iframe id="community-playlist" src="https://embed.spotify.com/?uri=spotify:user:ecs-priteshg:playlist:36lspQixPdiCRNY925VemB&theme=white" frameborder="0" allowtransparency="true" style="width: 100%; height: 500px" ng-show="playlistCreated"></iframe>
+                <a id="create-playlist" class="waves-effect waves-button load" ng-click="createPlaylist()">Play Playlist</a>
             </div>
         </div>
 
-        <h2>Existing Playlists</h2>
-        <div class="row" id="existing-playlists">
+        <!-- <h2 class="for-loggedin">Your Existing Playlists</h2> -->
+        <div class="row for-loggedin" id="existing-playlists">
             <div class="col-md-6" id="playlists-list">
             </div>
             <div class="col-md-6" id="playlist-detail">

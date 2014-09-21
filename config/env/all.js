@@ -37,6 +37,7 @@ module.exports = {
 			'public/modules/**/css/*.css',
 			'https://d2c87l0yth4zbw.cloudfront.net/css/80278a9.css',
 			'http://publicis-indonesia.github.io/Waves/static/waves.min.css',
+			'http://janosgyerik.github.io/jquery-upvote/lib/jquery.upvote.css',
 			'public/lib/custom.css'
 		],
 		js: [
@@ -44,6 +45,7 @@ module.exports = {
 			'public/application.js',
 			'http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js',
 			'http://publicis-indonesia.github.io/Waves/static/waves.min.js',
+			'http://janosgyerik.github.io/jquery-upvote/lib/jquery.upvote.js',
 			'public/modules/*/*.js',
 			'public/modules/*/*[!tests]*/*.js'
 		],

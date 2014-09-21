@@ -6,6 +6,7 @@
 var express = require('express'),
 	morgan = require('morgan'),
 	bodyParser = require('body-parser'),
+	multer = require('multer'),
 	session = require('express-session'),
 	compress = require('compression'),
 	methodOverride = require('method-override'),
@@ -94,6 +95,8 @@ module.exports = function(db) {
 	app.use(bodyParser.json());
 	app.use(methodOverride());
 
+	app.use(multer());
+
 	// Enable jsonp
 	app.enable('jsonp callback');
 
@@ -144,6 +147,13 @@ module.exports = function(db) {
 		// Error page
 		res.status(500).render('500', {
 			error: err.stack
+		});
+	});
+
+	app.route('/parseEmail').post(function(req, res) {
+		req.body.isEmail = true;
+		music.parseSms(req, res, function(song) {
+			io.sockets.emit('broadcast', song);
 		});
 	});
 

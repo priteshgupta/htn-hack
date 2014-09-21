@@ -93,7 +93,7 @@ angular.module('core').controller('HomeController', ['$scope', '$http', '$filter
       		var songs = $filter('orderBy')($scope.songs, $scope.orderPred);
 
       		songs.forEach(function(song) {
-			  		if (i == len - 1) {
+			  		if (i === len - 1) {
   	    			uristring += 'spotify:track:' + song.sid;
 						} else {
 	      			uristring += 'spotify:track:' + song.sid + ',';							

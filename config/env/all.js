@@ -21,20 +21,29 @@ module.exports = {
 				'public/lib/angular/angular.js',
 				'public/lib/angular-resource/angular-resource.js',
 				'public/lib/angular-animate/angular-animate.js',
+				// 'public/lib/angular-cookies/angular-cookies.js',
+				// 'public/lib/angular-touch/angular-touch.js',
+				// 'public/lib/angular-sanitize/angular-sanitize.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.js',
 				'public/lib/angular-ui-utils/ui-utils.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js'
+				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
+				'public/lib/socket.io-client/socket.io.js',
+				'public/lib/angular-socket-io/socket.io.js', 
+				'public/lib/angular-socket-io/socket.js', 
+				// 'public/lib/angular-socket-io/socket.io.js'
 			]
 		},
 		css: [
 			'public/modules/**/css/*.css',
 			'https://d2c87l0yth4zbw.cloudfront.net/css/80278a9.css',
+			'http://publicis-indonesia.github.io/Waves/static/waves.min.css',
 			'public/lib/custom.css'
 		],
 		js: [
 			'public/config.js',
 			'public/application.js',
 			'http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js',
+			'http://publicis-indonesia.github.io/Waves/static/waves.min.js',
 			'public/modules/*/*.js',
 			'public/modules/*/*[!tests]*/*.js'
 		],

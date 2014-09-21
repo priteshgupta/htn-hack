@@ -18,3 +18,8 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 		});
 	}
 ]);
+
+angular.module('core')
+.factory('mySocket', function(socketFactory) {
+    return socketFactory();
+});

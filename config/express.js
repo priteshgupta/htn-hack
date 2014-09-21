@@ -18,11 +18,26 @@ var express = require('express'),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
-	path = require('path');
+	path = require('path'),
+	http = require('http'),
+	music = require('../app/controllers/music.server.controller');
 
 module.exports = function(db) {
 	// Initialize express app
 	var app = express();
+	var server = http.createServer(app);
+  var io = require('socket.io').listen(server);
+
+  // Configure socket.io
+  io.on('connection', function(socket) {
+      console.log('connected');
+      socket.on('message', function(msg) {
+          io.sockets.emit('broadcast', {
+              payload: msg,
+              source: 'from'
+          });
+      });
+  });
 
 	// Globbing model files
 	config.getGlobbedFiles('./app/models/**/*.js').forEach(function(modelPath) {
@@ -132,6 +147,12 @@ module.exports = function(db) {
 		});
 	});
 
+	app.route('/parseSms').post(function(req, res, next) {
+		music.parseSms(req, res, function(song) {
+			io.sockets.emit('broadcast', song);
+		});
+	});
+
 	// Assume 404 since no middleware responded
 	app.use(function(req, res) {
 		res.status(404).render('404', {
@@ -140,5 +161,6 @@ module.exports = function(db) {
 		});
 	});
 
-	return app;
+
+	return server;
 };

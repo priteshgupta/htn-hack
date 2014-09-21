@@ -1,14 +1,31 @@
 <section data-ng-controller="HomeController">
   <div class="main container">
     <div id="login">
-      <h1>Spotify Playlisted</h1>
+      <h1>&nbsp;</h1>
         <button id="login" class="btn btn-primary">Login with Spotify</button>
     </div>
     <div id="loggedin">
-        <div id="playlists">
-            <div id="playlists-list">
+        <h2>Community Playlist</h2>
+        <div class="row" id="existing-playlists">
+            <div class="col-md-6" id="community-playlists-list">
+            <ul>
+                <li ng-repeat='song in songs'>
+                    <!-- Score: {{ song.score }} -->
+                    <a href="#" class="waves-effect waves-button load" data-score="{{song.score}}">{{ song.title }}</a>
+                </li>
+            </ul>
             </div>
-            <div id="playlist-detail">
+            <div class="col-md-6" id="community-playlist-detail">
+                <iframe id="community-playlist" src="https://embed.spotify.com/?uri=spotify:track:4bz7uB4edifWKJXSDxwHcs" width="300" height="380" frameborder="0" allowtransparency="true"></iframe>
+            </div>
+        </div>
+
+        <h2>Existing Playlists</h2>
+        <div class="row" id="existing-playlists">
+            <div class="col-md-6" id="playlists-list">
+            </div>
+            <div class="col-md-6" id="playlist-detail">
+                <iframe id="playlist" src="https://embed.spotify.com/?uri=spotify:user:ecs-priteshg:playlist:36lspQixPdiCRNY925VemB&theme=white" frameborder="0" allowtransparency="true" style="width: 100%; height: 500px "></iframe>
             </div>
         </div>
         <div id="results"></div>
@@ -17,10 +34,10 @@
 
   
 <script id="playlists-list-template" type="text/x-handlebars-template">
-    <ul>
+    <ul class="playlists">
     {{#each}}
         <li>
-            <a href="#" class="load" data-link="{{href}}">{{name}}</a>
+            <a href="#" class="waves-effect waves-button load" data-link="{{href}}" data-owner="{{owner.id}}" data-id="{{id}}">{{name}}</a>
         </li>
     {{/each}}
     </ul>

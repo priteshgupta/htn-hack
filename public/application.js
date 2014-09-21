@@ -43,13 +43,13 @@ angular.element(document).ready(function() {
 		    var params = {
 		        client_id: '48cdd615536f436288c432e3f760ac66',
 		        redirect_uri: 'http://104.131.40.122:3000/loggedin',
-		        scope: 'user-read-private playlist-read-private',
+		        scope: 'user-read-private playlist-read-private playlist-modify playlist-modify-private',
 		        response_type: 'token'
 		    };
 		    authWindow = window.open(
 		        "https://accounts.spotify.com/authorize?" + toQueryString(params),
 		        "Spotify",
-		        'menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left
+		        'expires_in=172800,menubar=no,location=no,resizable=no,scrollbars=no,status=no, width=' + width + ', height=' + height + ', top=' + top + ', left=' + left
 		    );
 		}
 
@@ -66,60 +66,95 @@ angular.element(document).ready(function() {
 		var authWindow = null;
 		var token = null;
 		var myCookie = null;
+		var user_id = 'ecs-priteshg';
+		var sp_user = 'ecs-priteshg';
+		var sp_playlist = '36lspQixPdiCRNY925VemB';	
+		var sp_frameUrl = 'https://embed.spotify.com/?uri=spotify:user:' + sp_user + ':playlist:' + sp_playlist + '&theme=white';
+		var sp_newPlaylist = '';
 
-		var checkCookie = setInterval(function() {
+		var searchCookie = function() {
 			myCookie = document.cookie.replace(/(?:(?:^|.*;\s*)spotau\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 
 			if (myCookie) {
+        $('div#login').hide();
 				clearInterval(checkCookie);
-				document.getElementById('login').remove();
-		    showInfo(myCookie);
+		    showInfo(myCookie, function(myCookie) {
+		    	createPlaylist(myCookie);
+		    });
 			}
-		}, 200);
+		};
 
-		function showInfo(accessToken) {
-		    token = accessToken;
+		var checkCookie = setInterval(searchCookie, 200);
+
+		function createPlaylist(accessToken) {
+			if (document.cookie.replace(/(?:(?:^|.*;\s*)spotcompl\s*\=\s*([^;]*).*$)|^.*$/, "$1"))
+				return;
+
+	    var date = new Date();
+	    var plName = 'HTN ' + (date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear();
+
+	    var url = 'https://api.spotify.com/v1/users/' + user_id + '/playlists';
+
+	    $.ajax(url, {
+	    	method: 'POST',
+	    	data: JSON.stringify({
+	    		'name': plName,
+	    		'public': false
+	    	}),
+	    	dataType: 'json',
+	    	headers: {
+	    		'Authorization': 'Bearer ' + accessToken,
+	    		'Content-Type': 'application/json'
+	    	},
+	    	success: function(response) {
+	    		window.playlist_url = sp_newPlaylist = response.href;
+	    		var sp_c_frameUrl = 'https://embed.spotify.com/?uri=spotify:user:' + response.owner.id + ':playlist:' + response.id + '&theme=white';
+	    		$('#community-playlist').attr('src', sp_c_frameUrl);
+	    		document.cookie = 'spotcompl=true';
+	    	}
+	    });
+		};
+
+		function showInfo(accessToken, cb) {
+		    window.token = token = accessToken;
 		    // fetch my public playlists
 		    $.ajax({
 		        url: 'https://api.spotify.com/v1/me',
 		        headers: {
 		            'Authorization': 'Bearer ' + accessToken
 		        },
-		        success: function(response) {         
-		            var user_id = response.id.toLowerCase();         
+		        success: function(response) {
+		            user_id = response.id.toLowerCase();         
 		            $.ajax({
-		                url: 'https://api.spotify.com/v1/users/' + user_id + '/playlists',
+		                url: 'https://api.spotify.com/v1/users/' + user_id + '/playlists?limit=15',
 		                headers: {
 		                    'Authorization': 'Bearer ' + accessToken
 		                },
 		                success: function(response) {
-		                    console.log(response);
-		                    playlistsListPlaceholder.innerHTML = playlistsListTemplate(response.items);
+	                    playlistsListPlaceholder.innerHTML = playlistsListTemplate(response.items);
+                      Waves.displayEffect({duration: 1250});
 		                }
 		            });
 		         
 		            $('div#login').hide();
 		            $('div#loggedin').show();
+		            cb(accessToken);
+		        },
+		        error: function(response) {
+		        	$('div#login').show();
+		        	alert('Something went wrong, please refresh the page after logging in');
 		        }
 		    });
-		}
+		};
 
 		playlistsListPlaceholder.addEventListener('click', function(e) {
 		    var target = e.target;
 		    if (target !== null && target.classList.contains('load')) {
-		        e.preventDefault();
-		        var link = target.getAttribute('data-link');
-		               
-		        $.ajax({
-		            url: link,
-		            headers: {
-		                'Authorization': 'Bearer ' + token
-		            },
-		            success: function(response) {
-		                console.log(response);
-		                playlistDetailPlaceholder.innerHTML = playlistDetailTemplate(response);
-		            }
-		        });
+	        e.preventDefault();
+	        sp_user = target.getAttribute('data-owner');
+	        sp_playlist = target.getAttribute('data-id');
+	        sp_frameUrl = 'https://embed.spotify.com/?uri=spotify:user:' + sp_user + ':playlist:' + sp_playlist + '&theme=white';
+	        $('#playlist').attr('src', sp_frameUrl);
 		    }
 		});
 	}, 300);

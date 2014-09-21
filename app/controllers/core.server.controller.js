@@ -12,7 +12,6 @@ exports.index = function(req, res) {
 };
 
 exports.loggedin = function(req, res) {
-	console.log('Logging in');
 	res.render('loggedin', {
 		user: req.user || null
 	});
